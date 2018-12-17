@@ -6,6 +6,23 @@ import { VgEvents } from '../core/events/vg-events';
 import { VgFullscreenAPI } from '../core/services/vg-fullscreen-api';
 import { Subscription } from 'rxjs';
 
+export class Ima {
+    adDisplayContainer: google.ima.AdDisplayContainer;
+    adsLoader: google.ima.AdsLoader;
+    adsManager: google.ima.AdsManager;
+    adsLoaded: boolean;
+    currentAd: number;
+
+    constructor(imaAdsElement: HTMLElement) {
+        this.adDisplayContainer = new google.ima.AdDisplayContainer(imaAdsElement);
+        this.adsLoader = new google.ima.AdsLoader(this.adDisplayContainer);
+
+        this.adsManager = null;
+        this.adsLoaded = false;
+        this.currentAd = 0;
+    }
+}
+
 @Component({
     selector: 'vg-ima-ads',
     encapsulation: ViewEncapsulation.None,
@@ -41,12 +58,12 @@ export class VgImaAds implements OnInit, OnDestroy {
     elem: HTMLElement;
     target: IPlayable;
     ima: Ima;
-    isFullscreen: boolean = false;
+    isFullscreen = false;
     skipButton: HTMLElement;
 
     subscriptions: Subscription[] = [];
 
-    @HostBinding('style.display') displayState: string = 'none';
+    @HostBinding('style.display') displayState = 'none';
 
     constructor(ref: ElementRef, public API: VgAPI, public fsAPI: VgFullscreenAPI) {
         this.elem = ref.nativeElement;
@@ -296,23 +313,5 @@ export class VgImaAds implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.subscriptions.forEach(s => s.unsubscribe());
-    }
-}
-
-
-export class Ima {
-    adDisplayContainer: google.ima.AdDisplayContainer;
-    adsLoader: google.ima.AdsLoader;
-    adsManager: google.ima.AdsManager;
-    adsLoaded: boolean;
-    currentAd: number;
-
-    constructor(imaAdsElement: HTMLElement) {
-        this.adDisplayContainer = new google.ima.AdDisplayContainer(imaAdsElement);
-        this.adsLoader = new google.ima.AdsLoader(this.adDisplayContainer);
-
-        this.adsManager = null;
-        this.adsLoaded = false;
-        this.currentAd = 0;
     }
 }
